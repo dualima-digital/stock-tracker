@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbzPj0q8wRapY4EcsJyr_STdHthCiXxzp__YHugYwa4-No7ym5d6vvSY9Qlw2i3iQjzy0A/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbztg-W8OQtdgpyx5WdKs16VolKVq33xPQ5EVQ4vvKq6Hu_kl1xKIbpcDy4KhxTwllg5ug/exec";
 const API_TOKEN = "baraganteng";
 
 // ---------------- LIST TO BUY ----------------

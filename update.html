@@ -6,8 +6,9 @@
   <link rel="stylesheet" href="style.css">
   <script src="script.js"></script>
 </head>
-<body onload="loadItems()">
+<body onload="initUpdatePage()">
   <h2>Stock Update</h2>
+  <input type="text" id="searchBar" placeholder="Search product..." onkeyup="filterDropdown()">
   <select id="itemDropdown"></select>
   <input type="number" id="qty" placeholder="Quantity">
   <select id="type">

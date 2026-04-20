@@ -25,7 +25,7 @@ async function loadList() {
       let div = document.createElement("div");
       div.innerHTML = `
         <label>
-          <input type="checkbox" name="skip" value="${product}"> Skip ${product}
+          <input type="checkbox" name="skip" value="${product}"> ${product}
         </label>
       `;
       form.appendChild(div);
@@ -39,7 +39,7 @@ async function submitList() {
   for (let item of skipped) {
     await fetch(`${API_URL}?action=skipItem&item=${encodeURIComponent(item)}&token=${API_TOKEN}`);
   }
-  loadList(); // refresh list
+  loadList(); // refresh list after submit
 }
 
 async function checkMonthReset() {
@@ -75,7 +75,7 @@ function renderDropdown(items) {
     return;
   }
 
-  // Add dummy "Select a product..." option
+  // Always show dummy "Select a product..." first
   let dummy = document.createElement("option");
   dummy.textContent = "Select a product...";
   dummy.disabled = true;
@@ -98,6 +98,10 @@ function filterDropdown() {
 
 async function submitUpdate() {
   let item = document.getElementById("itemDropdown").value;
+  if (item === "Select a product...") {
+    alert("Please select a valid product.");
+    return;
+  }
   let qty = document.getElementById("qty").value;
   let type = document.getElementById("type").value;
   await fetch(`${API_URL}?action=updateStock&item=${encodeURIComponent(item)}&qty=${qty}&type=${type}&token=${API_TOKEN}`);

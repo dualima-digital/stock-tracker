@@ -1,5 +1,5 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbxz73Cq_qqjiniriidhm2Q0LeCCEV4vhp7REP0qAIC6we_HWVrCBk6pqbi5Vp33DxioeQ/exec";
-const API_TOKEN = "baraganteng"; // must match backend
+const API_TOKEN = "MY_SECRET_TOKEN"; // must match backend
 
 // ---------------- LIST TO BUY ----------------
 function initListPage() {
@@ -20,6 +20,7 @@ async function loadList() {
   }
 
   items.forEach(item => {
+    // Normalize: item could be ["Rice",""] or just "Rice"
     let product = Array.isArray(item) ? item[0] : item;
     if (product) {
       let div = document.createElement("div");
@@ -36,6 +37,16 @@ async function loadList() {
 async function submitList() {
   let skipped = Array.from(document.querySelectorAll("input[name=skip]:checked"))
                      .map(cb => cb.value);
+
+  if (skipped.length === 0) {
+    alert("No items selected.");
+    return;
+  }
+
+  if (!confirm("Are you sure you want to process selected items as SKIP/DONE?")) {
+    return;
+  }
+
   for (let item of skipped) {
     await fetch(`${API_URL}?action=skipItem&item=${encodeURIComponent(item)}&token=${API_TOKEN}`);
   }
@@ -54,6 +65,8 @@ async function checkMonthReset() {
 let allItems = [];
 
 function initUpdatePage() {
+  // Show dummy option immediately
+  renderDropdown([]);
   loadItems();
   setInterval(loadItems, 5 * 60 * 1000); // auto-refresh every 5 min
 }
@@ -68,19 +81,14 @@ function renderDropdown(items) {
   let dropdown = document.getElementById("itemDropdown");
   dropdown.innerHTML = "";
 
-  if (!items || items.length === 0) {
-    let opt = document.createElement("option");
-    opt.textContent = "No products available";
-    dropdown.appendChild(opt);
-    return;
-  }
-
   // Always show dummy "Select a product..." first
   let dummy = document.createElement("option");
   dummy.textContent = "Select a product...";
   dummy.disabled = true;
   dummy.selected = true;
   dropdown.appendChild(dummy);
+
+  if (!items || items.length === 0) return;
 
   items.forEach(item => {
     let opt = document.createElement("option");
@@ -104,6 +112,11 @@ async function submitUpdate() {
   }
   let qty = document.getElementById("qty").value;
   let type = document.getElementById("type").value;
+
+  if (!confirm(`Confirm update: ${type} ${qty} for ${item}?`)) {
+    return;
+  }
+
   await fetch(`${API_URL}?action=updateStock&item=${encodeURIComponent(item)}&qty=${qty}&type=${type}&token=${API_TOKEN}`);
   alert("Stock updated!");
 }

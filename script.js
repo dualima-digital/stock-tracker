@@ -3,28 +3,33 @@ const API_TOKEN = "baraganteng"; // must match backend
 
 // ---------------- LIST TO BUY ----------------
 async function loadList() {
-  let res = await fetch(`${API_URL}?action=getList&token=${API_TOKEN}`);
-  let items = await res.json();
-  let form = document.getElementById("listForm");
-  form.innerHTML = "";
+  try {
+    let res = await fetch(`${API_URL}?action=getList&token=${API_TOKEN}`);
+    let items = await res.json();
+    let form = document.getElementById("listForm");
+    form.innerHTML = "";
 
-  if (!items || items.length === 0) {
-    form.innerHTML = "<p>No items to buy right now.</p>";
-    return;
-  }
-
-  items.forEach(item => {
-    let product = Array.isArray(item) ? item[0] : item;
-    if (product) {
-      let div = document.createElement("div");
-      div.innerHTML = `
-        <label>
-          <input type="checkbox" name="skip" value="${product}"> ${product}
-        </label>
-      `;
-      form.appendChild(div);
+    if (!items || items.length === 0) {
+      form.innerHTML = "<p>No items to buy right now.</p>";
+      return;
     }
-  });
+
+    items.forEach(item => {
+      let product = Array.isArray(item) ? item[0] : item;
+      if (product) {
+        let div = document.createElement("div");
+        div.innerHTML = `
+          <label>
+            <input type="checkbox" name="skip" value="${product}"> ${product}
+          </label>
+        `;
+        form.appendChild(div);
+      }
+    });
+  } catch (err) {
+    console.error("Error loading list:", err);
+    document.getElementById("listForm").innerHTML = "<p>Error loading list.</p>";
+  }
 }
 
 async function submitList() {
@@ -36,9 +41,7 @@ async function submitList() {
     return;
   }
 
-  if (!confirm("Are you sure you want to mark selected items as SKIP/DONE?")) {
-    return;
-  }
+  if (!confirm("Are you sure you want to mark selected items as SKIP/DONE?")) return;
 
   for (let item of skipped) {
     await fetch(`${API_URL}?action=skipItem&item=${encodeURIComponent(item)}&token=${API_TOKEN}`);
@@ -56,9 +59,14 @@ function initUpdatePage() {
 }
 
 async function loadItems() {
-  let res = await fetch(`${API_URL}?action=getItems&token=${API_TOKEN}`);
-  allItems = await res.json();
-  renderDropdown(allItems);
+  try {
+    let res = await fetch(`${API_URL}?action=getItems&token=${API_TOKEN}`);
+    allItems = await res.json();
+    renderDropdown(allItems);
+  } catch (err) {
+    console.error("Error loading items:", err);
+    renderDropdown([]);
+  }
 }
 
 function renderDropdown(items) {

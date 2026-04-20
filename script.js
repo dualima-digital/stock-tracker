@@ -21,8 +21,8 @@ async function loadList() {
         let row = document.createElement("tr");
         row.innerHTML = `
           <td>${product}</td>
-          <td><input type="checkbox" name="done" value="${product}"></td>
-          <td><input type="checkbox" name="skip" value="${product}"></td>
+          <td><input type="checkbox" name="done" value="${product}" onclick="toggleExclusiveCheckbox('${product}','DONE')"></td>
+          <td><input type="checkbox" name="skip" value="${product}" onclick="toggleExclusiveCheckbox('${product}','SKIP')"></td>
         `;
         tbody.appendChild(row);
       }
@@ -31,6 +31,19 @@ async function loadList() {
     console.error("Error loading list:", err);
     document.getElementById("listForm").innerHTML =
       `<tr><td colspan="3">Error loading list.</td></tr>`;
+  }
+}
+
+// Ensure only one checkbox per item can be selected
+function toggleExclusiveCheckbox(item, type) {
+  const doneBox = document.querySelector(`input[name=done][value="${item}"]`);
+  const skipBox = document.querySelector(`input[name=skip][value="${item}"]`);
+
+  if (type === "DONE" && doneBox.checked) {
+    skipBox.checked = false;
+  }
+  if (type === "SKIP" && skipBox.checked) {
+    doneBox.checked = false;
   }
 }
 

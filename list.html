@@ -1,16 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Stock Update</title>
-  <link rel="stylesheet" href="style.css">
+  <title>List to Buy</title>
   <script src="script.js"></script>
+  <style>
+    .home-btn {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: #0078D7;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body onload="loadList()">
-  <button onclick="location.href='index.html'" class="home-btn">🏠</button>
+  <button class="home-btn" onclick="location.href='index.html'">🏠</button>
   <h2>List to Buy</h2>
-  <button type="button" onclick="loadList()">🔄 Refresh</button>
-  <form id="listForm"></form>
-  <button type="button" onclick="submitList()">Submit</button>
+  <div id="listForm"></div>
+  <button onclick="loadList()">Refresh List</button>
+  <button onclick="submitList()">Submit SKIP/DONE</button>
 </body>
 </html>

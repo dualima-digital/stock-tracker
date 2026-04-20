@@ -1,5 +1,5 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbwNA5tYvCjiO3mNIUt2-yJHiu5w8c8KEbV75n2Hvqevr3C3wlyqcXLedmRt72IpjETgpA/exec"; // replace with your Web App URL
-const API_TOKEN = "baraganteng"; // must match backend
+const API_URL = "https://script.google.com/macros/s/AKfycbwNA5tYvCjiO3mNIUt2-yJHiu5w8c8KEbV75n2Hvqevr3C3wlyqcXLedmRt72IpjETgpA/exec";
+const API_TOKEN = "baraganteng";
 
 // ---------------- LIST TO BUY ----------------
 async function loadList() {
@@ -18,10 +18,11 @@ async function loadList() {
       let product = Array.isArray(item) ? item[0] : item;
       if (product) {
         let div = document.createElement("div");
+        div.className = "item-row";
         div.innerHTML = `
-          <label>
-            <input type="checkbox" name="skip" value="${product}"> ${product}
-          </label>
+          <span>${product}</span>
+          <label><input type="checkbox" name="done" value="${product}"> DONE</label>
+          <label><input type="checkbox" name="skip" value="${product}"> SKIP</label>
         `;
         form.appendChild(div);
       }
@@ -33,78 +34,28 @@ async function loadList() {
 }
 
 async function submitList() {
-  let skipped = Array.from(document.querySelectorAll("input[name=skip]:checked"))
-                     .map(cb => cb.value);
+  let doneItems = Array.from(document.querySelectorAll("input[name=done]:checked"))
+                       .map(cb => cb.value);
+  let skippedItems = Array.from(document.querySelectorAll("input[name=skip]:checked"))
+                          .map(cb => cb.value);
 
-  if (skipped.length === 0) {
+  if (doneItems.length === 0 && skippedItems.length === 0) {
     alert("No items selected.");
     return;
   }
 
-  if (!confirm("Are you sure you want to mark selected items as SKIP/DONE?")) return;
+  if (!confirm("Are you sure you want to process selected items?")) return;
 
-  for (let item of skipped) {
+  // Process DONE items (clear from list)
+  for (let item of doneItems) {
     await fetch(`${API_URL}?action=skipItem&item=${encodeURIComponent(item)}&token=${API_TOKEN}`);
   }
+
+  // Process SKIP items
+  for (let item of skippedItems) {
+    await fetch(`${API_URL}?action=skipItem&item=${encodeURIComponent(item)}&token=${API_TOKEN}`);
+  }
+
+  alert("Submission complete! DONE items cleared, SKIP items marked.");
   loadList(); // refresh list after submit
-}
-
-// ---------------- STOCK UPDATE ----------------
-let allItems = [];
-
-function initUpdatePage() {
-  renderDropdown([]);
-  loadItems();
-}
-
-async function loadItems() {
-  try {
-    let res = await fetch(`${API_URL}?action=getItems&token=${API_TOKEN}`);
-    allItems = await res.json();
-    renderDropdown(allItems);
-  } catch (err) {
-    console.error("Error loading items:", err);
-    renderDropdown([]);
-  }
-}
-
-function renderDropdown(items) {
-  let dropdown = document.getElementById("itemDropdown");
-  dropdown.innerHTML = "";
-
-  let dummy = document.createElement("option");
-  dummy.textContent = "Select a product...";
-  dummy.disabled = true;
-  dummy.selected = true;
-  dropdown.appendChild(dummy);
-
-  if (!items || items.length === 0) return;
-
-  items.forEach(item => {
-    let opt = document.createElement("option");
-    opt.value = item;
-    opt.textContent = item;
-    dropdown.appendChild(opt);
-  });
-}
-
-function filterDropdown() {
-  let query = document.getElementById("searchBar").value.toLowerCase();
-  let filtered = allItems.filter(item => item.toLowerCase().includes(query));
-  renderDropdown(filtered);
-}
-
-async function submitUpdate() {
-  let item = document.getElementById("itemDropdown").value;
-  if (item === "Select a product...") {
-    alert("Please select a valid product.");
-    return;
-  }
-  let qty = document.getElementById("qty").value;
-  let type = document.getElementById("type").value;
-
-  if (!confirm(`Confirm update: ${type} ${qty} for ${item}?`)) return;
-
-  await fetch(`${API_URL}?action=updateStock&item=${encodeURIComponent(item)}&qty=${qty}&type=${type}&token=${API_TOKEN}`);
-  alert("Stock updated!");
 }

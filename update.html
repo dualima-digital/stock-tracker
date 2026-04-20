@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Stock Update</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js"></script>
+</head>
+<body onload="loadItems()">
+  <h2>Stock Update</h2>
+  <select id="itemDropdown"></select>
+  <input type="number" id="qty" placeholder="Quantity">
+  <select id="type">
+    <option value="IN">IN</option>
+    <option value="OUT">OUT</option>
+  </select>
+  <button type="button" onclick="submitUpdate()">Submit</button>
+</body>
+</html>

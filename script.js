@@ -27,23 +27,19 @@ async function loadList() {
   });
 }
 
-async function submitList() {
-  let skipped = Array.from(document.querySelectorAll("input[name=skip]:checked"))
-                     .map(cb => cb.value);
-
-  if (skipped.length === 0) {
-    alert("No items selected.");
+async function submitUpdate() {
+  let item = document.getElementById("itemDropdown").value;
+  if (item === "Select a product...") {
+    alert("Please select a valid product.");
     return;
   }
+  let qty = document.getElementById("qty").value;
+  let type = document.getElementById("type").value;
 
-  if (!confirm("Are you sure you want to process selected items as SKIP/DONE?")) {
-    return;
-  }
+  if (!confirm(`Confirm update: ${type} ${qty} for ${item}?`)) return;
 
-  for (let item of skipped) {
-    await fetch(`${API_URL}?action=skipItem&item=${encodeURIComponent(item)}&token=${API_TOKEN}`);
-  }
-  loadList(); // refresh list after submit
+  await fetch(`${API_URL}?action=updateStock&item=${encodeURIComponent(item)}&qty=${qty}&type=${type}&token=${API_TOKEN}`);
+  alert("Stock updated!");
 }
 
 // ---------------- STOCK UPDATE ----------------

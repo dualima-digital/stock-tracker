@@ -1,13 +1,7 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbxz73Cq_qqjiniriidhm2Q0LeCCEV4vhp7REP0qAIC6we_HWVrCBk6pqbi5Vp33DxioeQ/exec";
-const API_TOKEN = "MY_SECRET_TOKEN"; // must match backend
+const API_TOKEN = "baraganteng"; // must match backend
 
 // ---------------- LIST TO BUY ----------------
-function initListPage() {
-  loadList();
-  setInterval(loadList, 5 * 60 * 1000); // auto-refresh every 5 min
-  checkMonthReset();
-}
-
 async function loadList() {
   let res = await fetch(`${API_URL}?action=getList&token=${API_TOKEN}`);
   let items = await res.json();
@@ -20,7 +14,6 @@ async function loadList() {
   }
 
   items.forEach(item => {
-    // Normalize: item could be ["Rice",""] or just "Rice"
     let product = Array.isArray(item) ? item[0] : item;
     if (product) {
       let div = document.createElement("div");
@@ -53,14 +46,6 @@ async function submitList() {
   loadList(); // refresh list after submit
 }
 
-async function checkMonthReset() {
-  let today = new Date();
-  if (today.getDate() === 1) {
-    await fetch(`${API_URL}?action=getList&token=${API_TOKEN}`);
-    loadList();
-  }
-}
-
 // ---------------- STOCK UPDATE ----------------
 let allItems = [];
 
@@ -68,7 +53,6 @@ function initUpdatePage() {
   // Show dummy option immediately
   renderDropdown([]);
   loadItems();
-  setInterval(loadItems, 5 * 60 * 1000); // auto-refresh every 5 min
 }
 
 async function loadItems() {

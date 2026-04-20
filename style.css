@@ -19,3 +19,9 @@ h1, h2 {
   padding: 8px;
   margin-bottom: 10px;
 }
+.home-btn {
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+}

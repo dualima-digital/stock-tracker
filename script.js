@@ -1,35 +1,30 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbzPj0q8wRapY4EcsJyr_STdHthCiXxzp__YHugYwa4-No7ym5d6vvSY9Qlw2i3iQjzy0A/exec";
-const API_TOKEN = "baraganteng"; // must match backend
+const API_TOKEN = "baraganteng";
 
 // ---------------- LIST TO BUY ----------------
 async function loadList() {
-  try {
-    let res = await fetch(`${API_URL}?action=getList&token=${API_TOKEN}`);
-    let items = await res.json();
-    let form = document.getElementById("listForm");
-    form.innerHTML = "";
+  let res = await fetch(`${API_URL}?action=getList&token=${API_TOKEN}`);
+  let items = await res.json();
+  let form = document.getElementById("listForm");
+  form.innerHTML = "";
 
-    if (!items || items.length === 0) {
-      form.innerHTML = "<p>No items to buy right now.</p>";
-      return;
-    }
-
-    items.forEach(item => {
-      let product = Array.isArray(item) ? item[0] : item;
-      if (product) {
-        let div = document.createElement("div");
-        div.innerHTML = `
-          <label>
-            <input type="checkbox" name="skip" value="${product}"> ${product}
-          </label>
-        `;
-        form.appendChild(div);
-      }
-    });
-  } catch (err) {
-    console.error("Error loading list:", err);
-    document.getElementById("listForm").innerHTML = "<p>Error loading list.</p>";
+  if (!items || items.length === 0) {
+    form.innerHTML = "<p>No items to buy right now.</p>";
+    return;
   }
+
+  items.forEach(item => {
+    let product = Array.isArray(item) ? item[0] : item;
+    if (product) {
+      let div = document.createElement("div");
+      div.innerHTML = `
+        <label>
+          <input type="checkbox" name="skip" value="${product}"> ${product}
+        </label>
+      `;
+      form.appendChild(div);
+    }
+  });
 }
 
 async function submitList() {
@@ -46,34 +41,27 @@ async function submitList() {
   for (let item of skipped) {
     await fetch(`${API_URL}?action=skipItem&item=${encodeURIComponent(item)}&token=${API_TOKEN}`);
   }
-  loadList(); // refresh list after submit
+  loadList();
 }
 
 // ---------------- STOCK UPDATE ----------------
 let allItems = [];
 
 function initUpdatePage() {
-  // Show dummy option immediately
   renderDropdown([]);
   loadItems();
 }
 
 async function loadItems() {
-  try {
-    let res = await fetch(`${API_URL}?action=getItems&token=${API_TOKEN}`);
-    allItems = await res.json();
-    renderDropdown(allItems);
-  } catch (err) {
-    console.error("Error loading items:", err);
-    renderDropdown([]);
-  }
+  let res = await fetch(`${API_URL}?action=getItems&token=${API_TOKEN}`);
+  allItems = await res.json();
+  renderDropdown(allItems);
 }
 
 function renderDropdown(items) {
   let dropdown = document.getElementById("itemDropdown");
   dropdown.innerHTML = "";
 
-  // Always show dummy "Select a product..." first
   let dummy = document.createElement("option");
   dummy.textContent = "Select a product...";
   dummy.disabled = true;

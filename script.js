@@ -20,13 +20,16 @@ async function loadList() {
   }
 
   items.forEach(item => {
-    let div = document.createElement("div");
-    div.innerHTML = `
-      <label>
-        <input type="checkbox" name="skip" value="${item[0]}"> Skip ${item[0]}
-      </label>
-    `;
-    form.appendChild(div);
+    let product = Array.isArray(item) ? item[0] : item;
+    if (product) {
+      let div = document.createElement("div");
+      div.innerHTML = `
+        <label>
+          <input type="checkbox" name="skip" value="${product}"> Skip ${product}
+        </label>
+      `;
+      form.appendChild(div);
+    }
   });
 }
 
@@ -64,12 +67,21 @@ async function loadItems() {
 function renderDropdown(items) {
   let dropdown = document.getElementById("itemDropdown");
   dropdown.innerHTML = "";
+
   if (!items || items.length === 0) {
     let opt = document.createElement("option");
     opt.textContent = "No products available";
     dropdown.appendChild(opt);
     return;
   }
+
+  // Add dummy "Select a product..." option
+  let dummy = document.createElement("option");
+  dummy.textContent = "Select a product...";
+  dummy.disabled = true;
+  dummy.selected = true;
+  dropdown.appendChild(dummy);
+
   items.forEach(item => {
     let opt = document.createElement("option");
     opt.value = item;

@@ -21,8 +21,14 @@ async function loadList() {
         let row = document.createElement("tr");
         row.innerHTML = `
           <td>${product}</td>
-          <td><input type="checkbox" name="done" value="${product}" onclick="toggleExclusiveCheckbox('${product}','DONE')"></td>
-          <td><input type="checkbox" name="skip" value="${product}" onclick="toggleExclusiveCheckbox('${product}','SKIP')"></td>
+          <td>
+            <input type="checkbox" name="done" value="${product}" 
+                   onclick="toggleExclusiveCheckbox('${product}','DONE')">
+          </td>
+          <td>
+            <input type="checkbox" name="skip" value="${product}" 
+                   onclick="toggleExclusiveCheckbox('${product}','SKIP')">
+          </td>
         `;
         tbody.appendChild(row);
       }

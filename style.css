@@ -14,3 +14,8 @@ form div {
 h1, h2 {
   color: #333;
 }
+#searchBar {
+  width: 80%;
+  padding: 8px;
+  margin-bottom: 10px;
+}

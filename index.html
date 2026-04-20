@@ -2,44 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Inventory Management</title>
-  <script src="script.js"></script>
+  <title>Inventory App</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    h2 { margin-top: 30px; }
-    label { display: block; margin: 5px 0; }
-    input, select, button { margin: 5px 0; }
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    button { margin: 20px; padding: 15px 30px; font-size: 18px; }
   </style>
 </head>
 <body>
-
-  <!-- LIST TO BUY SECTION -->
-  <h2>List to Buy</h2>
-  <div id="listForm"></div>
-  <button onclick="loadList()">Refresh List</button>
-  <button onclick="submitList()">Submit SKIP/DONE</button>
-
-  <!-- STOCK UPDATE SECTION -->
-  <h2>Stock Update</h2>
-  <input type="text" id="searchBar" placeholder="Search product..." onkeyup="filterDropdown()">
-  <br>
-  <select id="itemDropdown"></select>
-  <br>
-  <input type="number" id="qty" placeholder="Quantity">
-  <select id="type">
-    <option value="IN">IN</option>
-    <option value="OUT">OUT</option>
-  </select>
-  <br>
-  <button onclick="submitUpdate()">Update Stock</button>
-
-  <script>
-    // Initialize dropdown when page loads
-    window.onload = function() {
-      loadList();
-      initUpdatePage();
-    };
-  </script>
-
+  <h1>Inventory Management</h1>
+  <button onclick="location.href='list.html'">List to Buy</button>
+  <button onclick="location.href='update.html'">Stock Update</button>
 </body>
 </html>

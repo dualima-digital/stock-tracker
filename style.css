@@ -20,8 +20,13 @@ h1, h2 {
   margin-bottom: 10px;
 }
 .home-btn {
+  position: fixed;
+  top: 10px;
+  left: 10px;
   background-color: #eee;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
   cursor: pointer;
 }

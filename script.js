@@ -46,16 +46,16 @@ async function submitList() {
 
   if (!confirm("Are you sure you want to process selected items?")) return;
 
-  // Process DONE items (clear from list)
+  // DONE items → add to stock (qty=1) and clear from list
   for (let item of doneItems) {
-    await fetch(`${API_URL}?action=skipItem&item=${encodeURIComponent(item)}&token=${API_TOKEN}`);
+    await fetch(`${API_URL}?action=doneItem&item=${encodeURIComponent(item)}&token=${API_TOKEN}`);
   }
 
-  // Process SKIP items
+  // SKIP items → mark skipped
   for (let item of skippedItems) {
     await fetch(`${API_URL}?action=skipItem&item=${encodeURIComponent(item)}&token=${API_TOKEN}`);
   }
 
-  alert("Submission complete! DONE items cleared, SKIP items marked.");
+  alert("Submission complete! DONE items added to stock, SKIP items marked.");
   loadList(); // refresh list after submit
 }

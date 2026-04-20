@@ -1,35 +1,31 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbwNA5tYvCjiO3mNIUt2-yJHiu5w8c8KEbV75n2Hvqevr3C3wlyqcXLedmRt72IpjETgpA/exec";
-const API_TOKEN = "baraganteng";
-
-// ---------------- LIST TO BUY ----------------
 async function loadList() {
   try {
     let res = await fetch(`${API_URL}?action=getList&token=${API_TOKEN}`);
     let items = await res.json();
-    let form = document.getElementById("listForm");
-    form.innerHTML = "";
+    let tbody = document.getElementById("listForm");
+    tbody.innerHTML = "";
 
     if (!items || items.length === 0) {
-      form.innerHTML = "<p>No items to buy right now.</p>";
+      tbody.innerHTML = `<tr><td colspan="3">No items to buy right now.</td></tr>`;
       return;
     }
 
     items.forEach(item => {
       let product = Array.isArray(item) ? item[0] : item;
       if (product) {
-        let div = document.createElement("div");
-        div.className = "item-row";
-        div.innerHTML = `
-          <span>${product}</span>
-          <label><input type="checkbox" name="done" value="${product}"> DONE</label>
-          <label><input type="checkbox" name="skip" value="${product}"> SKIP</label>
+        let row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${product}</td>
+          <td><input type="checkbox" name="done" value="${product}"></td>
+          <td><input type="checkbox" name="skip" value="${product}"></td>
         `;
-        form.appendChild(div);
+        tbody.appendChild(row);
       }
     });
   } catch (err) {
     console.error("Error loading list:", err);
-    document.getElementById("listForm").innerHTML = "<p>Error loading list.</p>";
+    document.getElementById("listForm").innerHTML =
+      `<tr><td colspan="3">Error loading list.</td></tr>`;
   }
 }
 

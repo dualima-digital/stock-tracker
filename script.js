@@ -1,30 +1,35 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbztg-W8OQtdgpyx5WdKs16VolKVq33xPQ5EVQ4vvKq6Hu_kl1xKIbpcDy4KhxTwllg5ug/exec";
-const API_TOKEN = "baraganteng";
+const API_URL = "https://script.google.com/macros/s/AKfycbzh_DfROQmQrZwtWiCL-bkRDw_lrj8bRtMeWU83SYKCReb1yN8Juslr6xksh3egf7ODMg/exec"; // replace with your Web App URL
+const API_TOKEN = "baraganteng"; // must match backend
 
 // ---------------- LIST TO BUY ----------------
 async function loadList() {
-  let res = await fetch(`${API_URL}?action=getList&token=${API_TOKEN}`);
-  let items = await res.json();
-  let form = document.getElementById("listForm");
-  form.innerHTML = "";
+  try {
+    let res = await fetch(`${API_URL}?action=getList&token=${API_TOKEN}`);
+    let items = await res.json();
+    let form = document.getElementById("listForm");
+    form.innerHTML = "";
 
-  if (!items || items.length === 0) {
-    form.innerHTML = "<p>No items to buy right now.</p>";
-    return;
-  }
-
-  items.forEach(item => {
-    let product = Array.isArray(item) ? item[0] : item;
-    if (product) {
-      let div = document.createElement("div");
-      div.innerHTML = `
-        <label>
-          <input type="checkbox" name="skip" value="${product}"> ${product}
-        </label>
-      `;
-      form.appendChild(div);
+    if (!items || items.length === 0) {
+      form.innerHTML = "<p>No items to buy right now.</p>";
+      return;
     }
-  });
+
+    items.forEach(item => {
+      let product = Array.isArray(item) ? item[0] : item;
+      if (product) {
+        let div = document.createElement("div");
+        div.innerHTML = `
+          <label>
+            <input type="checkbox" name="skip" value="${product}"> ${product}
+          </label>
+        `;
+        form.appendChild(div);
+      }
+    });
+  } catch (err) {
+    console.error("Error loading list:", err);
+    document.getElementById("listForm").innerHTML = "<p>Error loading list.</p>";
+  }
 }
 
 async function submitList() {
@@ -41,7 +46,7 @@ async function submitList() {
   for (let item of skipped) {
     await fetch(`${API_URL}?action=skipItem&item=${encodeURIComponent(item)}&token=${API_TOKEN}`);
   }
-  loadList();
+  loadList(); // refresh list after submit
 }
 
 // ---------------- STOCK UPDATE ----------------
@@ -53,9 +58,14 @@ function initUpdatePage() {
 }
 
 async function loadItems() {
-  let res = await fetch(`${API_URL}?action=getItems&token=${API_TOKEN}`);
-  allItems = await res.json();
-  renderDropdown(allItems);
+  try {
+    let res = await fetch(`${API_URL}?action=getItems&token=${API_TOKEN}`);
+    allItems = await res.json();
+    renderDropdown(allItems);
+  } catch (err) {
+    console.error("Error loading items:", err);
+    renderDropdown([]);
+  }
 }
 
 function renderDropdown(items) {

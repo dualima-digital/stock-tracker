@@ -5,26 +5,28 @@
   <title>List to Buy</title>
   <script src="script.js"></script>
   <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h2 { margin-bottom: 20px; }
+    .item-row { margin: 10px 0; }
+    button { margin-top: 10px; padding: 8px 16px; }
     .home-btn {
-      position: fixed;
-      top: 10px;
-      left: 10px;
+      display: block;
+      margin-top: 20px;
       background: #0078D7;
       color: white;
       border: none;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      font-size: 20px;
+      border-radius: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
       cursor: pointer;
     }
   </style>
 </head>
 <body onload="loadList()">
-  <button class="home-btn" onclick="location.href='index.html'">🏠</button>
   <h2>List to Buy</h2>
   <div id="listForm"></div>
   <button onclick="loadList()">Refresh List</button>
-  <button onclick="submitList()">Submit SKIP/DONE</button>
+  <button onclick="submitList()">Submit</button>
+  <button class="home-btn" onclick="location.href='index.html'">🏠 Home</button>
 </body>
 </html>

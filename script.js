@@ -1,5 +1,5 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbxz73Cq_qqjiniriidhm2Q0LeCCEV4vhp7REP0qAIC6we_HWVrCBk6pqbi5Vp33DxioeQ/exec";
-const API_TOKEN = "MY_SECRET_TOKEN"; // must match backend
+const API_TOKEN = "baraganteng"; // must match backend
 
 // ---------------- LIST TO BUY ----------------
 function initListPage() {
@@ -13,6 +13,12 @@ async function loadList() {
   let items = await res.json();
   let form = document.getElementById("listForm");
   form.innerHTML = "";
+
+  if (!items || items.length === 0) {
+    form.innerHTML = "<p>No items to buy right now.</p>";
+    return;
+  }
+
   items.forEach(item => {
     let div = document.createElement("div");
     div.innerHTML = `
@@ -58,6 +64,12 @@ async function loadItems() {
 function renderDropdown(items) {
   let dropdown = document.getElementById("itemDropdown");
   dropdown.innerHTML = "";
+  if (!items || items.length === 0) {
+    let opt = document.createElement("option");
+    opt.textContent = "No products available";
+    dropdown.appendChild(opt);
+    return;
+  }
   items.forEach(item => {
     let opt = document.createElement("option");
     opt.value = item;

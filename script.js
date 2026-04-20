@@ -1,5 +1,5 @@
 // Replace with your deployed Web App URL
-const API_URL = "AKfycbwNA5tYvCjiO3mNIUt2-yJHiu5w8c8KEbV75n2Hvqevr3C3wlyqcXLedmRt72IpjETgpA";
+const API_URL = "https://script.google.com/macros/s/AKfycbwNA5tYvCjiO3mNIUt2-yJHiu5w8c8KEbV75n2Hvqevr3C3wlyqcXLedmRt72IpjETgpA/exec";
 const API_TOKEN = "baraganteng"; // must match backend
 
 // ---------------- LIST TO BUY ----------------
